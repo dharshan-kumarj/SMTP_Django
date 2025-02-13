@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=your-secret-key-here
+      - EMAIL_HOST=smtp.gmail.com
+      - EMAIL_PORT=587
+      - EMAIL_HOST_USER=jdharshankumar18@gmail.com
+      - EMAIL_HOST_PASSWORD=bipj kdem tfrq skur
+      - PYTHONPATH=/app
+      - DJANGO_SETTINGS_MODULE=smtp_project.settings
+    volumes:
+      - .:/app
