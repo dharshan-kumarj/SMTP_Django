@@ -7,8 +7,8 @@ A simple Django project that sets up an SMTP server to handle contact form submi
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/django-smtp-server.git
-cd django-smtp-server
+git clone https://github.com/dharshan-kumarj/SMTP_Django.git
+cd SMTP_Django
 ```
 
 ### 2. Create a `.env` File
@@ -42,8 +42,6 @@ This will:
 
 You should see output similar to:
 ```
-✔ Network sriponsankarsmtp_default  Created
-✔ Container sriponsankarsmtp-web-1  Created
 Attaching to web-1
 web-1  | Operations to perform:
 web-1  |   Apply all migrations: admin, auth, contenttypes, sessions
