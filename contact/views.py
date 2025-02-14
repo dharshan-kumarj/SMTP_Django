@@ -24,7 +24,7 @@ def contact_form(request):
                 subject=subject,
                 message=email_message,
                 from_email=email,
-                recipient_list=['office@sriponsankarenterprises.com'],  # Your email
+                recipient_list=['dharshankumarlearn@gmail.com'],  # Your email
                 fail_silently=False,
             )
             
