@@ -117,7 +117,7 @@ curl -X POST http://localhost:8000/api/contact/submit/ \
 ## Project Structure
 
 ```
-django-smtp-server/
+SMTP_Django/
 ├── manage.py
 ├── Dockerfile
 ├── docker-compose.yml
