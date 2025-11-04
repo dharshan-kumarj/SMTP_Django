@@ -24,4 +24,4 @@ RUN mkdir -p /app/smtp_project
 
 # Run migrations and start server
 CMD python manage.py migrate && \
-    gunicorn --chdir /app smtp_project.wsgi:application --bind 0.0.0.0:8000
+    gunicorn --chdir /app smtp_project.wsgi:application --bind 0.0.0.0:8000 --timeout 120 --workers 2 --threads 2
