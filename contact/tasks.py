@@ -1,6 +1,7 @@
 import threading
 import queue
 import logging
+import time
 from django.core.mail import send_mail
 from django.conf import settings
 
@@ -23,20 +24,41 @@ class EmailWorker(threading.Thread):
                 # Wait for an email task (timeout after 1 second to check stop event)
                 email_data = email_queue.get(timeout=1)
                 
-                try:
-                    # Send the email
-                    send_mail(
-                        subject=email_data['subject'],
-                        message=email_data['message'],
-                        from_email=email_data['from_email'],
-                        recipient_list=email_data['recipient_list'],
-                        fail_silently=False,
-                    )
-                    logger.info(f"Email sent successfully to {email_data['recipient_list']}")
-                except Exception as e:
-                    logger.error(f"Failed to send email: {str(e)}")
-                finally:
-                    email_queue.task_done()
+                # Try to send email with retries
+                max_retries = 3
+                retry_delay = 2  # seconds
+                
+                for attempt in range(max_retries):
+                    try:
+                        # Send the email
+                        send_mail(
+                            subject=email_data['subject'],
+                            message=email_data['message'],
+                            from_email=email_data['from_email'],
+                            recipient_list=email_data['recipient_list'],
+                            fail_silently=False,
+                        )
+                        logger.info(f"Email sent successfully to {email_data['recipient_list']}")
+                        break  # Success, exit retry loop
+                        
+                    except Exception as e:
+                        error_msg = str(e)
+                        
+                        # Check if it's a network/connection error
+                        if 'Network is unreachable' in error_msg or 'Connection refused' in error_msg or 'timed out' in error_msg:
+                            if attempt < max_retries - 1:
+                                logger.warning(f"Network error on attempt {attempt + 1}/{max_retries}: {error_msg}. Retrying in {retry_delay}s...")
+                                time.sleep(retry_delay)
+                                retry_delay *= 2  # Exponential backoff
+                            else:
+                                logger.error(f"Failed to send email after {max_retries} attempts: {error_msg}")
+                                logger.error("SMTP may be blocked on this platform. Consider using SendGrid, Mailgun, or AWS SES.")
+                        else:
+                            # Non-network error, don't retry
+                            logger.error(f"Failed to send email: {error_msg}")
+                            break
+                
+                email_queue.task_done()
                     
             except queue.Empty:
                 continue
