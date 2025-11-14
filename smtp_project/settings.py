@@ -108,3 +108,10 @@ LOGGING = {
 
 # Performance optimizations
 CONN_MAX_AGE = 60  # Keep database connections alive for 60 seconds
+
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
